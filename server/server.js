@@ -21,6 +21,12 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('User disconnected');
     })
+
+    socket.emit('newMessage', { from: 'pepe@hotmail.com', text: 'asasasasasasas', createdAt: '123'  });
+
+    socket.on('createMessage', (data) => {
+        console.log('create message from client', data)
+    });
 });
 
 module.exports = {app};

@@ -22,6 +22,9 @@ io.on('connection', (socket) => {
         console.log('User disconnected');
     })
 
+    socket.emit('newMessage', { from: 'Admin', text: 'Wellcome to the chatroom!', createdDat: new Date().getTime() } );
+    socket.broadcast.emit('newMessage', { from: 'Admin', text: 'New User has joined the chatroom!', createdDat: new Date().getTime() });
+
     socket.on('createMessage', (data) => {
         console.log('create message from client', data)
 

@@ -24,6 +24,8 @@ io.on('connection', (socket) => {
 
     socket.on('createMessage', (data) => {
         console.log('create message from client', data)
+
+        io.emit('newMessage', { from: data.from, text: data.text, createdAt: data.createdAt });
     });
 });
 

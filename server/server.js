@@ -26,10 +26,10 @@ io.on('connection', (socket) => {
     socket.emit('newMessage', generateMessage('Admin', 'Wellcome to the chatroom!'));
     socket.broadcast.emit('newMessage', generateMessage('Admin', 'New User has joined the chatroom!'));
 
-    socket.on('createMessage', (data) => {
-        console.log('create message from client', data)
-
-        io.emit('newMessage', generateMessage(data.from, data.text));
+    socket.on('createMessage', (message, callback) => {
+        console.log('createMessage', message)
+        io.emit('newMessage', generateMessage(message.from, message.text));
+        callback();
     });
 
     socket.on('createLocationMessage', (coords) => {

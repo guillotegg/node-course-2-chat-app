@@ -9,7 +9,7 @@ describe('generateMessage', () => {
         var text = "this is a test";
         var message = generateMessage(from, text);
 
-        expect(typeof message.createdAt).toBe('number');
+        expect(typeof message.createdAt).toBe('function');
         expect(message).toMatchObject({from, text});
         
     })
@@ -24,7 +24,7 @@ describe('generateLocationMessage', () => {
         var url = `https://www.google.com/maps?q=${latitude},${longitude}`;
         var locationMessage = generateLocationMessage(from, latitude, longitude);        
         
-        expect(typeof locationMessage.createdAt).toBe('number');
+        expect(typeof locationMessage.createdAt).toBe('function');
         expect(locationMessage).toMatchObject({from, url});
         
     })

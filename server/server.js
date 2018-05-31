@@ -25,16 +25,18 @@ io.on('connection', (socket) => {
     socket.on('join', (params, callback) => {
         if (!isRealString(params.name) || !isRealString(params.room)){
             callback('Name and Room are required!.');
+        } else if (users.getUserByName(params.name)) {
+            callback(`The name "${params.name}" is already being used by another user. Please choose a different one.`);
+        } else {
+            socket.join(params.room);
+            users.removeUser(socket.id);
+            users.addUser(socket.id, params.name, params.room);
+            
+            io.to(params.room).emit('updateUserList', users.getUserList(params.room));
+            socket.emit('newMessage', generateMessage('Admin', 'Wellcome to the chatroom!'));
+            socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined`));
+            callback();
         }
-
-        socket.join(params.room);
-        users.removeUser(socket.id);
-        users.addUser(socket.id, params.name, params.room);
-        
-        io.to(params.room).emit('updateUserList', users.getUserList(params.room));
-        socket.emit('newMessage', generateMessage('Admin', 'Wellcome to the chatroom!'));
-        socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined`));
-        callback();
     });
 
     socket.on('createMessage', (message, callback) => {

@@ -24,9 +24,7 @@ socket.on('connect', function() {
         if (err) {
             alert(err);
             window.location.href = '/';
-        } else {
-            console.log('no error');
-        }
+        } 
     })
 });
 
@@ -108,7 +106,8 @@ function notifyNewMessage(userName, message) {
     if (Notification.permission !== "granted")
       Notification.requestPermission();
     else {
-      var notification = new Notification(`New message from ${userName}:`, {
+        window.name = 'test';
+        var notification = new Notification(`New message from ${userName}:`, {
         icon: './../images/notificacion.png',
         body: message
       });

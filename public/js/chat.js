@@ -42,13 +42,18 @@ socket.on('disconnect', function() {
     console.log('Disconnected from the server');
 });
 
-socket.on('newMessage', function(message) {
+socket.on('newMessage', function(message, socketId) {
     var template = jQuery('#message-template').html();
     var html = Mustache.render(template, {
         from: message.from,
         createdAt: moment(message.createdAt).format('h:mm a'),
         text: message.text
     });
+
+    if (!document.hasFocus() && socketId!==socket.id && message.from !== 'Admin') {
+        notifyNewMessage(message.from, message.text);
+    }
+
     jQuery('#messages').append(html);
     scrollToBottom();
 });
@@ -59,7 +64,8 @@ socket.on('newLocationMessage', function(message) {
         from: message.from,
         createdAt: moment(message.createdAt).format('h:mm a'),
         url: message.url
-    });
+    });    
+    
     jQuery('#messages').append(html);
     scrollToBottom();
 });
@@ -97,3 +103,15 @@ locationButton.on('click', function()     {
         };    
     });
 });
+
+function notifyNewMessage(userName, message) {
+    if (Notification.permission !== "granted")
+      Notification.requestPermission();
+    else {
+      var notification = new Notification(`New message from ${userName}:`, {
+        icon: './../images/notificacion.png',
+        body: message
+      });
+      setTimeout(notification.close.bind(notification), 5000);      
+    }
+}

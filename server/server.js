@@ -21,7 +21,7 @@ server.listen(port, () => {
 });
 
 io.on('connection', (socket) => {
-    console.log('New user connected');
+    console.log('New user connected');    
 
     socket.on('join', (params, callback) => {
         if (!isRealString(params.name) || !isRealString(params.room)){
@@ -34,7 +34,7 @@ io.on('connection', (socket) => {
             users.addUser(socket.id, params.name, params.room);
             
             io.to(params.room).emit('updateUserList', users.getUserList(params.room));
-            socket.emit('newMessage', generateMessage('Admin', 'Wellcome to the chatroom!'));
+            socket.emit('newMessage', generateMessage('Admin', `Wellcome to the ${params.room} chat room!`));
             socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined`));
             callback();
         }
@@ -66,6 +66,16 @@ io.on('connection', (socket) => {
             io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} as left.`));
         }
     })
+});
+
+// APIs:
+
+app.get('/user/', (req, res) => { 
+    res.status(200).send(users.getUserByName(req.query.name, req.query.room));
+});
+
+app.get('/rooms', (req, res) => { 
+    res.status(200).send(findRooms(io));
 });
 
 module.exports = {app};

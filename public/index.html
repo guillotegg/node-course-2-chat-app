@@ -4,29 +4,34 @@
     <head>
         <meta charset="utf-8">
         <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/jquery-editable-select.css">
         <title>Join | ChatApp</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"></meta>
     </head>
 
     <body class="centered-form">
         <div class="centered-form__form">
-            <form action="/chat.html">
+            <form id="frmJoin" action="/chat.html">
                 <div class="form-field">
                     <h3>Join a Chat</h3>
                 </div>
                 <div class="form-field">
                     <label>Display Name</label>
-                    <input type="text" name="name" autofocus />
+                    <input type="text" id="name" name="name" autofocus autocomplete="off" />
                 </div>
                 <div class="form-field">
                     <label>Room name</label>
-                    <input type="text" name="room" />
+                    <select id="room" name="room"></select>                    
                 </div>
                 <div class="form-field">
-                    <button>Join</button>
+                    <button id="btnJoin">Join</button>
                 </div>
-            </form>
-        </div>        
+            </form>            
+        </div>  
+        
+        <script src="/js/lib/jquery-3.3.1.min.js"></script>
+        <script src="/js/index.js"></script>
+        <script src="/js/lib/jquery-editable-select.js"></script>
     </body>
 
 </html

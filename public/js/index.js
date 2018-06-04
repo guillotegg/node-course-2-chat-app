@@ -1,4 +1,4 @@
-var env = window.location.href.search('localhost') > 0 ? 'http://localhost:3000' : 'https://safe-fortress-69635.herokuapp.com/';
+var env = window.location.href.search('localhost') > 0 ? 'http://localhost:3000' : 'https://safe-fortress-69635.herokuapp.com';
 
 $(() => {
     $.get(`${env}/rooms`)

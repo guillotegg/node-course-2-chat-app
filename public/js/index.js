@@ -1,6 +1,8 @@
 var env = window.location.href.search('localhost') > 0 ? 'http://localhost:3000' : 'https://safe-fortress-69635.herokuapp.com';
 
 $(() => {
+    jQuery('#effect').hide();
+
     $.get(`${env}/rooms`)
         .done(function(data) {
         if (data) {            
@@ -15,12 +17,12 @@ $(() => {
         });
 });
 
-$('#btnJoin').on('click', (e) => {    
+$('#btnJoin').on('click', (e) => {
     var name = $('#name').val();
     var room = $('#room').val();
     
     if (!name.trim() || !room.trim()) {
-        alert("Name and Room are required!")
+        $("#effect").hide().html('<p>Name and Room required!</p>').toggle('shake');
         return false;
     }
 
@@ -28,7 +30,7 @@ $('#btnJoin').on('click', (e) => {
     $.get(`${env}/user/?name=${name}&room=${room}`)
         .done(function(data) {
            if (data) {
-                alert(`The name "${data.name}" is already being used by another user. Please choose a different one.`);                              
+                $("#effect").hide().html(`<p>The name "${data.name}" is already being used by another user. Please choose a different one.</p>`).toggle('shake');
             } else {
                 $('#frmJoin').submit();
             }

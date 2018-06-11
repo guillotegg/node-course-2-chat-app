@@ -36,6 +36,7 @@ io.on('connection', (socket) => {
             io.to(params.room).emit('updateUserList', users.getUserList(params.room));
             socket.emit('newMessage', generateMessage('Admin', `Welcome to the ${params.room} chat room!`));
             socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined`));
+            console.log('socket.id', socket.id);
             callback();
         }
     });
@@ -47,6 +48,12 @@ io.on('connection', (socket) => {
             io.to(user.room).emit('newMessage', generateMessage(user.name, message.text), socket.id);
         }
         
+        callback();
+    });
+
+    socket.on('createDirectMessage', (message, callback) => {
+        console.log('createDirectMessage');
+        io.to(message.toId).emit('newDirectMessage', message);
         callback();
     });
 

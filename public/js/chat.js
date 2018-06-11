@@ -1,8 +1,9 @@
 var socket = io();
+var user = '';
+var room = '';
 
-function scrollToBottom() {
+function scrollToBottom(messages) {
     //selectors
-    var messages = jQuery('#messages');
     var newMessage = messages.children('li:last-child');
     //heights
     var clientHeight = messages.prop('clientHeight');
@@ -19,7 +20,9 @@ function scrollToBottom() {
 
 socket.on('connect', function() {
     var params = jQuery.deparam(window.location.search);
-
+    user = params.name;
+    room =  params.room;
+    
     socket.emit('join', params, function(err) {
         if (err) {
             alert(err);
@@ -29,9 +32,18 @@ socket.on('connect', function() {
 });
 
 socket.on('updateUserList', (users) => {
-    var ol = jQuery('<ol></ol>');
+    var ol = jQuery('<ul></ul>');
+    var name;
+    var li;
     users.forEach(function(user) {
-        ol.append(jQuery('<li></li>').text(user));
+        li = jQuery('<li></li>');        
+        if (user.id === socket.id) {            
+            li.text(user.name + " (me)")            
+        } else {
+            li.text(user.name);
+            li.dblclick(function() { openDirectChat(user.id, user.name) } );
+        }                
+        ol.append(li);        
     });
     jQuery('#users').html(ol);
 });
@@ -49,11 +61,12 @@ socket.on('newMessage', function(message, socketId) {
     });
 
     if (!document.hasFocus() && socketId!==socket.id && message.from !== 'Admin') {
-        notifyNewMessage(message.from, message.text);
+        notifyNewMessage(message.from, message.text, false);
     }
 
-    jQuery('#messages').append(html);
-    scrollToBottom();
+    var messages = jQuery('#messages')
+    messages.append(html);
+    scrollToBottom(messages);
 });
 
 socket.on('newLocationMessage', function(message) {
@@ -64,13 +77,29 @@ socket.on('newLocationMessage', function(message) {
         url: message.url
     });    
     
-    jQuery('#messages').append(html);
-    scrollToBottom();
+    var messages = jQuery('#messages')
+    messages.append(html);
+    scrollToBottom(messages);
 });
 
-jQuery('#message-form').on('submit', function(e) {
-    e.preventDefault();
+socket.on('newDirectMessage', function(message) {    
+    var popUpId = `${message.fromId}_${room}`;
+    if (!popups.includes(popUpId)) {
+        openDirectChat(message.fromId, message.fromName);
+    }
+    receiveDirectMessage(message.fromName, message.fromName, message.text)
+});
 
+var message = jQuery('#message');
+var sendButton = jQuery('#send');
+
+message.keypress(function(e) {
+    if (e.keyCode === 13) {
+        sendButton.click();
+    }
+})
+
+sendButton.on('click', function() {
     var messageTextbox = jQuery('#message');
 
     socket.emit('createMessage', {
@@ -82,7 +111,7 @@ jQuery('#message-form').on('submit', function(e) {
 
 var locationButton = jQuery('#send-location');
 
-locationButton.on('click', function()     {
+locationButton.on('click', function() {
     if (!navigator.geolocation){
         return alert('Geolocation not supported by your browser.');
     }
@@ -102,15 +131,67 @@ locationButton.on('click', function()     {
     });
 });
 
-function notifyNewMessage(userName, message) {
+function messageDirectKeyPress(e, toUser) {
+    if (e.keyCode === 13) {
+        var popUpId = `${toUser}_${room}`;
+        jQuery(`#sendDirect_${popUpId}`).click();
+    }
+}
+
+function sendDirectMessage (toId, toUser) {
+    var popUpId = `${toUser}_${room}`;
+    var messageTextbox = jQuery(`#messageDirect_${popUpId}`);
+    receiveDirectMessage(user, toUser, messageTextbox.val())
+    
+    socket.emit('createDirectMessage', {
+        fromId: socket.id,
+        fromName: user,
+        toId : toId,
+        text: messageTextbox.val()
+    }, function() {        
+        messageTextbox.val('');
+    });   
+};
+
+function receiveDirectMessage(from, toId, text) {
+    var template = jQuery('#message-direct-template').html();
+    var html = Mustache.render(template, {from: from, createdAt: moment(message.createdAt).format('h:mm a'),text: text});
+
+    if (from !== user && !document.hasFocus()) {
+        notifyNewMessage(from, text, true);
+    }
+    
+    var popUpId = `${toId}_${room}`;
+    var messages = jQuery(`#messagesDirect_${popUpId}`)
+    messages.append(html);
+    scrollToBottom(messages);
+}
+
+function notifyNewMessage(userName, message, isDirect) {
     if (Notification.permission !== "granted")
       Notification.requestPermission();
     else {
         window.name = 'test';
-        var notification = new Notification(`New message from ${userName}:`, {
+        var content = !isDirect ? `${userName} in ${room}: ` : `${userName}: `;
+        var notification = new Notification(content, {
         icon: './../images/notificacion.png',
         body: message
       });
       setTimeout(notification.close.bind(notification), 5000);      
     }
 }
+
+function openDirectChat(id, name) {
+    var popUpId = `${name}_${room}`;
+    register_popup(popUpId, name, user);
+
+    var template = jQuery('#chatDirect-template').html();
+    var html = Mustache.render(template, {messagesDirectId: `messagesDirect_${popUpId}`,
+                                          messageDirectId: `messageDirect_${popUpId}`,
+                                          sendDirectId: `sendDirect_${popUpId}`,
+                                          toId: id,
+                                          toUser: name});   
+    jQuery(`#popup-messages_${popUpId}`).append(html);
+    jQuery(`#messageDirect_${popUpId}`).focus();       
+}
+

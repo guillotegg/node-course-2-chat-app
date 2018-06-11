@@ -23,7 +23,7 @@
     color: white;
     cursor: pointer;
     padding: 10px;
-    transition: background .3s ease;
+    transition: background .3s ease;    
   }
   
   button:hover {
@@ -111,6 +111,7 @@
     border-radius: 5px;
     padding: 10px;
     margin: 10px;
+    cursor: pointer;
   }
   
   .chat__main {
@@ -129,8 +130,7 @@
   .chat__footer {
     background: #e6eaee;
     display: flex;
-    padding: 10px;
-    /*height: 60px;*/
+    padding: 10px;    
     flex-shrink: 0;
   }
   
@@ -141,6 +141,10 @@
   
   .chat__footer form * {
     margin-right: 10px;
+  }
+
+  .chat__footer div {
+    margin-right: 10px;    
   }
   
   .chat__footer input {
@@ -192,6 +196,6 @@
     }
   
     .chat__footer button {
-      margin-right: 0px;
+      margin-right: 0px;      
     }
   }

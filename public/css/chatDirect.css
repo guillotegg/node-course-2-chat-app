@@ -1,0 +1,117 @@
+ 
+  .buttonDirect {
+    font-size: .75rem;
+    border: none;
+    background: #265f82;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    transition: background .3s ease;    
+  }
+  
+  .buttonDirect:hover {
+    border: none;
+    background: #1F4C69;
+    color: white;
+    padding: 5px;
+  }
+  
+  .buttonDirect:disabled {
+    cursor: default;
+    background: #698ea5;
+  }
+  
+  .chatDirect {
+    display: flex;
+  }
+  
+  .chatDirect__main {
+    display: flex;
+    flex-direction: column;
+    height: 97%;
+    width: 100%;    
+  }
+  
+  .chatDirect__messageDirect {
+    flex-grow: 1;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;            
+  }
+  
+  .chatDirect__footer {
+    background: #e6eaee;
+    display: flex;
+    padding: 0px 5px 32px 5px;
+    flex-shrink: 0;    
+  }
+  
+  .chatDirect__footer form-direct {
+    flex-grow: 1;
+    display: flex;
+  }
+  
+  .chatDirect__footer form-direct * {
+    margin-right: 10px;
+  }
+
+  .chatDirect__footer div {
+    margin-right: 10px;    
+  }
+  
+  .chatDirect__footer input {
+    font-size: .75rem;    
+    padding: 10px;
+    flex-grow: 1;
+  }
+  
+  .chatDirect__messageDirect {    
+    list-style-type: none;
+    padding: 10px;
+  }
+
+  .chatDirect__messageDirect li {
+    background: #D6D6D6;    
+    border-radius: 8px;
+    padding: 8px;    
+  }
+  
+  .messageDirect {
+    margin: 8px;
+  }
+
+  .messageDirect__title span {
+    color: #999;
+  }
+
+  .messageDirect__wrapper {
+    padding: 4px;
+  }
+
+  .messageDirect__wrapper .message__title h4, span {
+    font-size: .75rem;
+  }
+
+  .messageDirect__wrapper .message__body p {
+    font-size: .75rem;
+    color: #464646;
+  }
+  
+  #effect { padding-bottom: 20px }
+  
+  @media (max-width: 600px) {
+    * {
+      font-size: 1rem;
+    }
+  
+    .chatDirect__footer {
+      flex-direction: column;
+    }
+  
+    .chatDirect__footer form-direct {
+      margin-bottom: 10px;
+    }
+  
+    .chatDirect__footer .buttonDirect {
+      margin-top: 5px;
+    }
+  }

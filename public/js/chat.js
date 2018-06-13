@@ -48,6 +48,11 @@ socket.on('updateUserList', (users) => {
     jQuery('#users').html(ol);
 });
 
+socket.on('userDisconnected', (user) => {
+    var popUpId = `${user.name}_${room}`;    
+    close_popup(popUpId, true);    
+})
+
 socket.on('disconnect', function() {
     console.log('Disconnected from the server');
 });
@@ -171,7 +176,6 @@ function notifyNewMessage(userName, message, isDirect) {
     if (Notification.permission !== "granted")
       Notification.requestPermission();
     else {
-        window.name = 'test';
         var content = !isDirect ? `${userName} in ${room}: ` : `${userName}: `;
         var notification = new Notification(content, {
         icon: './../images/notificacion.png',

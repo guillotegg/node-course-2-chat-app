@@ -12,7 +12,7 @@ var total_popups = 0;
 var popups = [];
 
 //this is used to close a popup
-function close_popup(id)
+function close_popup(id, remove)
 {
     for(var iii = 0; iii < popups.length; iii++)
     {
@@ -20,7 +20,8 @@ function close_popup(id)
         {
             Array.remove(popups, iii);
             
-            document.getElementById(id).style.display = "none";
+            //document.getElementById(id).style.display = "none";
+            jQuery(`#${id}`).hide( "bounce", { direction: "down" }, "slow", function() { remove && $(this).remove(); } );
             
             calculate_popups();
             
@@ -42,7 +43,8 @@ function display_popups()
             var element = document.getElementById(popups[iii]);
             element.style.right = right + "px";
             right = right + 320;
-            element.style.display = "block";
+            //element.style.display = "block";
+            jQuery(element).show( "bounce", { direction: "down" }, "slow" );
         }
     }
     

@@ -69,31 +69,55 @@
     padding: 10px;
   }
 
-  .chatDirect__messageDirect li {
-    background: #D6D6D6;    
-    border-radius: 8px;
-    padding: 8px;    
+  .chatDirect__messageDirect ul {    
+   max-width: 99%;  
   }
+
+  .chatDirect__messageDirect li {
+    /*background: #D6D6D6;*/
+    border-radius: 8px;
+    padding: 8px;
+    word-wrap: break-word;
+    max-width: fit-content;    
+  } 
   
   .messageDirect {
-    margin: 8px;
+    margin: 10px;
+  }
+
+  .messageDirect.from {
+    background: #F1F0F0;
+    color:#7B7E83;
+  }
+
+  .messageDirect.to  {
+    background: #4080FF;
+    color: #FFFFFF;    
+  }
+
+  .messageDirect__title {
+    display: flex;
+    margin-bottom: 5px;
+    font-size: .75rem;
+  }
+  
+  .messageDirect__title h4 {
+    font-weight: 600;
+    margin-right: 10px;
+    font-size: .75rem;
   }
 
   .messageDirect__title span {
-    color: #999;
+    font-size: .55rem;
   }
 
   .messageDirect__wrapper {
     padding: 4px;
   }
 
-  .messageDirect__wrapper .message__title h4, span {
+  .messageDirect__body p {
     font-size: .75rem;
-  }
-
-  .messageDirect__wrapper .message__body p {
-    font-size: .75rem;
-    color: #464646;
+    /*color: #464646;*/
   }
   
   #effect { padding-bottom: 20px }

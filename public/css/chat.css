@@ -161,6 +161,21 @@
   .message {
     padding: 10px;
   }
+
+  .message.join {
+    font-weight: bold;
+    color: #4080FF
+  }
+
+  .message.left {
+    font-weight: bold;
+    color: #FF5840
+  }
+
+  .message.general {
+    font-weight: bold;
+    color: #4F4F4F;
+  }
   
   .message__title {
     display: flex;

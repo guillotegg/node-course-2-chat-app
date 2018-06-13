@@ -34,8 +34,8 @@ io.on('connection', (socket) => {
             users.addUser(socket.id, params.name, params.room);
             
             io.to(params.room).emit('updateUserList', users.getUserList(params.room));
-            socket.emit('newMessage', generateMessage('Admin', `Welcome to the ${params.room} chat room!`));
-            socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined`));
+            socket.emit('newMessage', generateMessage('Admin', `Welcome to the ${params.room} chat room!`), null, 'general');
+            socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined`), null, 'join');
             console.log('socket.id', socket.id);
             callback();
         }
@@ -52,8 +52,9 @@ io.on('connection', (socket) => {
     });
 
     socket.on('createDirectMessage', (message, callback) => {
-        console.log('createDirectMessage');
-        io.to(message.toId).emit('newDirectMessage', message);
+        if (isRealString(message.text)) {
+            io.to(message.toId).emit('newDirectMessage', message);
+        }
         callback();
     });
 
@@ -70,7 +71,7 @@ io.on('connection', (socket) => {
 
         if (user) {
             io.to(user.room).emit('updateUserList', users.getUserList(user.room));
-            io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has left.`));
+            io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has left.`), null, 'left');
             io.to(user.room).emit('userDisconnected', user);
         }
     })

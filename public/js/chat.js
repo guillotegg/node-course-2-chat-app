@@ -57,7 +57,7 @@ socket.on('disconnect', function() {
     console.log('Disconnected from the server');
 });
 
-socket.on('newMessage', function(message, socketId) {
+socket.on('newMessage', function(message, socketId, messageType) {
     var template = jQuery('#message-template').html();
     var html = Mustache.render(template, {
         from: message.from,
@@ -69,8 +69,12 @@ socket.on('newMessage', function(message, socketId) {
         notifyNewMessage(message.from, message.text, false);
     }
 
-    var messages = jQuery('#messages')
+    var messages = jQuery('#messages')    
+    
     messages.append(html);
+    if (message.from === 'Admin') {
+        messages.children('li:last-child').addClass(messageType);
+    }
     scrollToBottom(messages);
 });
 
@@ -92,7 +96,8 @@ socket.on('newDirectMessage', function(message) {
     if (!popups.includes(popUpId)) {
         openDirectChat(message.fromId, message.fromName);
     }
-    receiveDirectMessage(message.fromName, message.fromName, message.text)
+    //receiveDirectMessage(message.fromName, message.fromName, message.text, '#4080FF', '#FFFFFF')
+    receiveDirectMessage(message.fromName, message.fromName, message.text, 'from')
 });
 
 var message = jQuery('#message');
@@ -110,8 +115,10 @@ sendButton.on('click', function() {
     socket.emit('createMessage', {
         text: messageTextbox.val()
     }, function() {        
-        messageTextbox.val('');
+       
     });
+
+    messageTextbox.val('');
 });
 
 var locationButton = jQuery('#send-location');
@@ -146,19 +153,24 @@ function messageDirectKeyPress(e, toUser) {
 function sendDirectMessage (toId, toUser) {
     var popUpId = getPopUpId(toUser);
     var messageTextbox = jQuery(`#messageDirect_${popUpId}`);
-    receiveDirectMessage(user, toUser, messageTextbox.val())
     
-    socket.emit('createDirectMessage', {
-        fromId: socket.id,
-        fromName: user,
-        toId : toId,
-        text: messageTextbox.val()
-    }, function() {        
+    if (messageTextbox.val().replace(/ /g,'') !=='') {        
+        receiveDirectMessage(user, toUser, messageTextbox.val(), 'to')
+        
+        socket.emit('createDirectMessage', {
+            fromId: socket.id,
+            fromName: user,
+            toId : toId,
+            text: messageTextbox.val()
+        }, function() {        
+            
+        });
+
         messageTextbox.val('');
-    });   
+    }
 };
 
-function receiveDirectMessage(from, toId, text) {
+function receiveDirectMessage(from, toId, text, cssClass) {
     var template = jQuery('#message-direct-template').html();
     var html = Mustache.render(template, {from: from, createdAt: moment(message.createdAt).format('h:mm a'),text: text});
 
@@ -167,8 +179,9 @@ function receiveDirectMessage(from, toId, text) {
     }
     
     var popUpId = getPopUpId(toId);
-    var messages = jQuery(`#messagesDirect_${popUpId}`)
-    messages.append(html);
+    var messages = jQuery(`#messagesDirect_${popUpId}`)    
+    messages.append(html);    
+    messages.children('li:last-child').addClass(cssClass);
     scrollToBottom(messages);
 }
 
@@ -195,8 +208,7 @@ function openDirectChat(id, name) {
                                           sendDirectId: `sendDirect_${popUpId}`,
                                           toId: id,
                                           toUser: name});   
-    jQuery(`#popup-messages_${popUpId}`).append(html);
-    jQuery(`#messageDirect_${popUpId}`).focus();       
+    jQuery(`#popup-messages_${popUpId}`).append(html);    
 }
 
 function getPopUpId(userName) {

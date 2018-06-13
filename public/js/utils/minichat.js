@@ -21,7 +21,7 @@ function close_popup(id, remove)
             Array.remove(popups, iii);
             
             //document.getElementById(id).style.display = "none";
-            jQuery(`#${id}`).hide( "bounce", { direction: "down" }, "slow", function() { remove && $(this).remove(); } );
+            jQuery(`#${id}`).hide( "drop", { direction: "down" }, 200, function() { remove && $(this).remove(); } );
             
             calculate_popups();
             
@@ -44,7 +44,7 @@ function display_popups()
             element.style.right = right + "px";
             right = right + 320;
             //element.style.display = "block";
-            jQuery(element).show( "bounce", { direction: "down" }, "slow" );
+            jQuery(element).show( "drop", { direction: "down" }, 200 );
         }
     }
     

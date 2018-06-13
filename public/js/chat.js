@@ -49,7 +49,7 @@ socket.on('updateUserList', (users) => {
 });
 
 socket.on('userDisconnected', (user) => {
-    var popUpId = `${user.name}_${room}`;    
+    var popUpId = getPopUpId(user.name);
     close_popup(popUpId, true);    
 })
 
@@ -88,7 +88,7 @@ socket.on('newLocationMessage', function(message) {
 });
 
 socket.on('newDirectMessage', function(message) {    
-    var popUpId = `${message.fromId}_${room}`;
+    var popUpId = getPopUpId(message.fromId);
     if (!popups.includes(popUpId)) {
         openDirectChat(message.fromId, message.fromName);
     }
@@ -138,13 +138,13 @@ locationButton.on('click', function() {
 
 function messageDirectKeyPress(e, toUser) {
     if (e.keyCode === 13) {
-        var popUpId = `${toUser}_${room}`;
+        var popUpId = getPopUpId(toUser);
         jQuery(`#sendDirect_${popUpId}`).click();
     }
 }
 
 function sendDirectMessage (toId, toUser) {
-    var popUpId = `${toUser}_${room}`;
+    var popUpId = getPopUpId(toUser);
     var messageTextbox = jQuery(`#messageDirect_${popUpId}`);
     receiveDirectMessage(user, toUser, messageTextbox.val())
     
@@ -166,7 +166,7 @@ function receiveDirectMessage(from, toId, text) {
         notifyNewMessage(from, text, true);
     }
     
-    var popUpId = `${toId}_${room}`;
+    var popUpId = getPopUpId(toId);
     var messages = jQuery(`#messagesDirect_${popUpId}`)
     messages.append(html);
     scrollToBottom(messages);
@@ -186,7 +186,7 @@ function notifyNewMessage(userName, message, isDirect) {
 }
 
 function openDirectChat(id, name) {
-    var popUpId = `${name}_${room}`;
+    var popUpId = getPopUpId(name);
     register_popup(popUpId, name, user);
 
     var template = jQuery('#chatDirect-template').html();
@@ -197,5 +197,9 @@ function openDirectChat(id, name) {
                                           toUser: name});   
     jQuery(`#popup-messages_${popUpId}`).append(html);
     jQuery(`#messageDirect_${popUpId}`).focus();       
+}
+
+function getPopUpId(userName) {
+    return `${userName}_${room}`.replace(/ /g,'');
 }
 

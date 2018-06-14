@@ -1,24 +1,7 @@
  
   .buttonDirect {
-    font-size: .75rem;
-    border: none;
-    background: #265f82;
-    color: white;
-    cursor: pointer;
+    cursor: pointer;    
     padding: 5px;
-    transition: background .3s ease;    
-  }
-  
-  .buttonDirect:hover {
-    border: none;
-    background: #1F4C69;
-    color: white;
-    padding: 5px;
-  }
-  
-  .buttonDirect:disabled {
-    cursor: default;
-    background: #698ea5;
   }
   
   .chatDirect {

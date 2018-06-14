@@ -73,7 +73,7 @@ socket.on('newMessage', function(message, socketId, messageType) {
     
     messages.append(html);
     if (message.from === 'Admin') {
-        messages.children('li:last-child').addClass(messageType);
+        messages.children('li:last-child').addClass(messageType);        
     }
     scrollToBottom(messages);
 });

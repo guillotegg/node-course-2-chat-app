@@ -50,6 +50,7 @@
   .chatDirect__messageDirect {    
     list-style-type: none;
     padding: 10px;
+    overflow-x: hidden;
   }
 
   .chatDirect__messageDirect ul {    
@@ -61,7 +62,11 @@
     border-radius: 8px;
     padding: 8px;
     word-wrap: break-word;
-    max-width: fit-content;    
+    max-width: fit-content;
+    /*width: -moz-fit-content;
+    width: -webkit-fit-content;
+    width: -ms-fit-content;
+    width: -o-fit-content; */
   } 
   
   .messageDirect {

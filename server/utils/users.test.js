@@ -47,16 +47,16 @@ describe('Users', () => {
     it('should find a user', () => {
         var user = users.users[0];
         var result = users.getUser(user.id);
-        expect(result).toEqual([user]);
+        expect(result).toEqual(user);
     });
 
     it('should not find a user', () => {
         var result = users.getUser(4);
-        expect(result).toEqual([]);
+        expect(result).toEqual(undefined);
     });
 
     it('should get a list of users names for a given room', () => {
         var userList = users.getUserList('Room1');
-        expect(userList).toEqual([users.users[0].name, users.users[2].name]);
+        expect(userList).toEqual([users.users[0], users.users[2]]);
     });
 });
